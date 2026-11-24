@@ -1,8 +1,8 @@
-# NyemilYuk! 🍜 — Katalog UMKM + Dashboard
+# NyemilYuk! 🍜
 
 Website katalog camilan NyemilYuk! lengkap dengan keranjang, pemesanan otomatis via WhatsApp, dan dashboard untuk mengelola menu serta memantau pesanan.
 
-Dibangun dari file `nyemilyuk_katalog_final.html` dengan **desain, palet warna, layout, dan fitur aslinya dipertahankan**. Kode dipecah jadi struktur yang rapi agar mudah dikembangkan.
+
 
 ---
 
