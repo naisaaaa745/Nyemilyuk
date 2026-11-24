@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#56351f">
+  <title>Nyemil Yuk! — Risol, Sosbul & Indomie Nyemek</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="topbar">CEMILAN ENAK, HARGA BERSAHABAT ✦ Dibuat dengan penuh rasa</div>
+  <header>
+    <nav class="nav">
+      <a class="brand" href="#"><span class="brand-mark">🍟</span><span>Nyemil<span style="color:#b17b27">Yuk!</span></span></a>
+      <div class="navlinks"><a href="#home">Beranda</a><a href="#menu">Menu</a><a href="#about">Tentang</a><a href="dashboard.html">Dashboard</a></div>
+      <button class="cart-pill" onclick="openCart()">🛒 Keranjang <span class="count" id="cartCount">0</span></button>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero" id="home">
+      <div class="hero-inner">
+        <div class="hero-copy">
+          <span class="eyebrow">Teman ngemil setiap hari</span>
+          <h1>Lagi lapar?<br>Yuk, <span style="color:#8a4c24">nyemil!</span></h1>
+          <p>Risol hangat, sosbul gurih, sampai Indomie nyemek bakso yang bikin mood balik lagi. Pilih favoritmu dan pesan dengan mudah.</p>
+          <a class="primary-btn" href="#menu">Lihat Menu Kami <span style="margin-left:9px">→</span></a>
+        </div>
+        <div class="hero-art">
+          <img src="assets/images/hero-cemilan.jpg" alt="Cemilan kentang renyah">
+          <div class="sticker">ENAK<br>BUAT<br>NYEMIL! ✨</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="menu">
+      <div class="section-head">
+        <div><div class="kicker">Pilihan favorit</div><h2>Menu camilan & makanan</h2></div>
+        <p>Dipilih dulu, masukin keranjang, lalu checkout 💛</p>
+      </div>
+      <div class="filters" id="filters">
+        <button class="filter active" data-category="Semua">Semua menu</button>
+        <button class="filter" data-category="Cemilan">Cemilan</button>
+        <button class="filter" data-category="Makanan berat">Makanan berat</button>
+      </div>
+      <div class="products" id="products"></div>
+      <div class="note">💡 <strong>Info pemesanan:</strong> Tekan tombol Pesan untuk memesan satu menu langsung melalui WhatsApp, atau tambahkan beberapa menu ke keranjang untuk checkout sekaligus.</div>
+    </section>
+
+    <section class="about" id="about">
+      <div class="about-box">
+        <div><h3>Ngemil enak, hati senang! 💛</h3><p>Tempat jajan favoritmu untuk menikmati camilan gurih dan makanan hangat. Pesan menu pilihanmu melalui WhatsApp, lalu kami bantu konfirmasi pesanan.</p></div>
+        <a class="primary-btn" href="#menu">Jajan sekarang →</a>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <strong style="font-size:17px">NyemilYuk! 🍟</strong><br>
+    Terima kasih sudah mampir. Semoga harimu seenak cemilan favoritmu!<br>
+    <span style="opacity:.7">© 2026 NyemilYuk! — Made with love.</span><br>
+    <a class="footer-link" href="dashboard.html">Panel Dashboard →</a>
+  </footer>
+
+  <div class="overlay" id="overlay" onclick="closeCart()"></div>
+  <aside class="drawer" id="drawer" aria-label="Keranjang belanja">
+    <div class="drawer-head"><h3>Keranjang belanja 🛒</h3><button class="close" onclick="closeCart()" aria-label="Tutup">×</button></div>
+    <div class="cart-items" id="cartItems"><div class="empty">Keranjangmu masih kosong.<br>Yuk pilih cemilan favoritmu! 🍟</div></div>
+    <div class="cart-total">
+      <label class="field-label" for="customerName">Nama pemesan (opsional)</label>
+      <input class="field-mini" id="customerName" type="text" maxlength="60" placeholder="Nama kamu" autocomplete="name">
+      <div class="total-line"><span>Total</span><span id="totalPrice">Rp0</span></div>
+      <button class="checkout" id="checkoutBtn" onclick="checkout()" disabled>Pesan via WhatsApp ↗</button>
+      <div class="checkout-hint">Pesanan akan dikirim ke WhatsApp toko untuk konfirmasi.</div>
+    </div>
+  </aside>
+  <a class="wa-float" href="#" onclick="contactWhatsApp(event)">💬 Chat WhatsApp</a>
+  <div class="toast" id="toast">Berhasil ditambahkan ke keranjang!</div>
+
+    <script src="js/products.js"></script>
+  <script src="js/store.js"></script>
+  <script src="js/catalog.js"></script>
+</body>
+</html>

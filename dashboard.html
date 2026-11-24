@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#56351f">
+  <title>Dashboard — Nyemil Yuk!</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/dashboard.css">
+</head>
+<body>
+  <div class="topbar">PANEL TOKO ✦ Kelola menu & pesanan NyemilYuk!</div>
+  <header>
+    <nav class="nav">
+      <a class="brand" href="index.html"><span class="brand-mark">🍟</span><span>Nyemil<span style="color:#b17b27">Yuk!</span></span></a>
+      <div class="navlinks">
+        <a href="index.html">Katalog</a>
+        <a href="#ringkasan">Ringkasan</a>
+        <a href="#pesanan">Pesanan</a>
+        <a href="#produk">Produk</a>
+        <a href="#pengaturan">Pengaturan</a>
+      </div>
+      <a class="cart-pill" href="index.html">← Lihat Katalog</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="dash-head">
+      <div class="kicker">Panel pengelolaan</div>
+      <h1>Dashboard NyemilYuk! 🍟</h1>
+      <p>Pantau pesanan yang masuk dari WhatsApp, kelola menu katalog, dan ubah nomor toko dalam satu tempat. Perubahan langsung tampil di halaman katalog.</p>
+    </section>
+
+    <div class="note" id="fileNote" style="margin:18px 22px 0" hidden>
+      ⚠️ <strong>Mode file lokal:</strong> data katalog dan dashboard bisa tersimpan terpisah. Jalankan lewat server lokal (<code>python -m http.server 8000</code>) atau deploy ke GitHub Pages agar pesanan otomatis muncul di sini.
+    </div>
+
+    <div class="tabs">
+      <button class="tab active" data-target="ringkasan">📊 Ringkasan</button>
+      <button class="tab" data-target="pesanan">🧾 Pesanan</button>
+      <button class="tab" data-target="produk">🍽️ Produk</button>
+      <button class="tab" data-target="pengaturan">⚙️ Pengaturan</button>
+    </div>
+
+    <!-- RINGKASAN -->
+    <section class="stats" id="ringkasan">
+      <div class="stat"><div class="icon">🍽️</div><div class="label">Total menu</div><div class="value" id="statProducts">0</div><div class="sub" id="statCategories">0 kategori</div></div>
+      <div class="stat"><div class="icon">🧾</div><div class="label">Total pesanan</div><div class="value" id="statOrders">0</div><div class="sub" id="statNew">0 perlu diproses</div></div>
+      <div class="stat"><div class="icon">💰</div><div class="label">Nilai pesanan</div><div class="value" id="statRevenue">Rp0</div><div class="sub">Akumulasi semua pesanan</div></div>
+      <div class="stat"><div class="icon">💬</div><div class="label">WhatsApp toko</div><div class="value" style="font-size:18px" id="statWa">-</div><div class="sub">Tersambung ke tombol Pesan</div></div>
+    </section>
+
+    <section class="panel" id="ringkasan-detail">
+      <div class="panel-head">
+        <div><div class="kicker">Aktivitas terbaru</div><h2>Pesanan masuk terakhir</h2></div>
+        <a class="btn btn-ghost" href="#pesanan">Lihat semua →</a>
+      </div>
+      <div class="table-wrap" id="recentOrders"></div>
+    </section>
+
+    <!-- PESANAN -->
+    <section class="panel" id="pesanan">
+      <div class="panel-head">
+        <div><div class="kicker">Masuk dari WhatsApp</div><h2>Daftar pesanan</h2></div>
+        <button class="btn btn-ghost btn-small" onclick="renderOrders()">↻ Segarkan</button>
+      </div>
+      <div class="toolbar">
+        <input class="search" id="orderSearch" type="search" placeholder="Cari nama atau ID pesanan…" oninput="renderOrders()">
+        <button class="tab active" data-status="Semua" onclick="setStatusFilter(this)">Semua</button>
+        <button class="tab" data-status="Baru" onclick="setStatusFilter(this)">Baru</button>
+        <button class="tab" data-status="Diproses" onclick="setStatusFilter(this)">Diproses</button>
+        <button class="tab" data-status="Selesai" onclick="setStatusFilter(this)">Selesai</button>
+        <button class="tab" data-status="Dibatalkan" onclick="setStatusFilter(this)">Dibatalkan</button>
+      </div>
+      <div class="table-wrap" id="ordersTable"></div>
+    </section>
+
+    <!-- PRODUK -->
+    <section class="panel" id="produk">
+      <div class="panel-head">
+        <div><div class="kicker">Katalog</div><h2>Kelola produk</h2><p>Tambah, ubah, atau hapus menu. Katalog akan otomatis mengikuti.</p></div>
+        <button class="btn btn-primary" onclick="openProductModal()">+ Tambah produk</button>
+      </div>
+      <div class="table-wrap" id="productsTable"></div>
+    </section>
+
+    <!-- PENGATURAN -->
+    <section class="panel" id="pengaturan">
+      <div class="panel-head">
+        <div><div class="kicker">Toko</div><h2>Pengaturan</h2></div>
+      </div>
+
+      <div class="setting-row">
+        <div><h3>Nomor WhatsApp toko</h3><p>Dipakai oleh tombol Pesan, Checkout, dan Chat WhatsApp. Format: 08… atau 62…</p></div>
+        <div class="control">
+          <input id="waInput" type="tel" placeholder="085129793540">
+          <button class="btn btn-green" onclick="saveWhatsapp()">Simpan nomor</button>
+        </div>
+      </div>
+
+      <div class="setting-row">
+        <div><h3>Cadangkan data</h3><p>Unduh produk dan pesanan dalam bentuk file JSON.</p></div>
+        <div class="control"><button class="btn btn-ghost" onclick="exportData()">⬇ Unduh data (.json)</button></div>
+      </div>
+
+      <div class="setting-row">
+        <div><h3>Kembalikan data awal</h3><p>Menghapus semua pesanan dan mengembalikan 5 menu bawaan beserta nomor toko.</p></div>
+        <div class="control"><button class="btn btn-danger" onclick="resetData()">Reset data toko</button></div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <strong style="font-size:17px">NyemilYuk! 🍟</strong><br>
+    Panel dashboard — data tersimpan di browser perangkat ini.<br>
+    <a class="footer-link" href="index.html">Kembali ke katalog →</a>
+  </footer>
+
+  <!-- Modal tambah/edit produk -->
+  <div class="modal-overlay" id="productOverlay" onclick="closeProductModal()"></div>
+  <div class="modal" id="productModal" role="dialog" aria-label="Form produk">
+    <h3 id="productModalTitle">Tambah produk</h3>
+    <p style="font-size:11px;color:var(--muted);margin:6px 0 18px">Lengkapi data menu di bawah ini.</p>
+    <form id="productForm" onsubmit="saveProduct(event)">
+      <input type="hidden" id="productId">
+      <div class="form-grid">
+        <div class="form-field full"><label for="fName">Nama produk *</label><input id="fName" required maxlength="80" placeholder="Contoh: Risol Mayo"></div>
+        <div class="form-field full"><label for="fDesc">Deskripsi *</label><textarea id="fDesc" required maxlength="300" placeholder="Ceritakan rasanya…"></textarea></div>
+        <div class="form-field"><label for="fPrice">Harga (Rp) *</label><input id="fPrice" type="number" min="0" step="500" required placeholder="5000"></div>
+        <div class="form-field"><label for="fCategory">Kategori *</label><input id="fCategory" required list="categoryOptions" placeholder="Cemilan"><datalist id="categoryOptions"><option value="Cemilan"></option><option value="Makanan berat"></option><option value="Minuman"></option></datalist></div>
+        <div class="form-field"><label for="fTag">Label kecil</label><input id="fTag" maxlength="30" placeholder="Favorit"></div>
+        <div class="form-field"><label for="fImageFile">Upload foto</label><input id="fImageFile" type="file" accept="image/*" onchange="previewImage(this)"><span class="form-hint">Atau isi URL foto di kolom berikut.</span></div>
+        <div class="form-field full"><label for="fImage">URL foto</label><input id="fImage" placeholder="https://… atau assets/images/…"><img class="image-preview" id="imagePreview" alt="Pratinjau foto" hidden></div>
+      </div>
+      <div class="modal-foot">
+        <button type="button" class="btn btn-ghost" onclick="closeProductModal()">Batal</button>
+        <button type="submit" class="btn btn-primary">Simpan produk</button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Modal detail pesanan -->
+  <div class="modal-overlay" id="orderOverlay" onclick="closeOrderModal()"></div>
+  <div class="modal" id="orderModal" role="dialog" aria-label="Detail pesanan">
+    <h3 id="orderModalTitle">Detail pesanan</h3>
+    <div id="orderDetail"></div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" onclick="closeOrderModal()">Tutup</button>
+      <button class="btn btn-green" id="waOrderBtn" onclick="copyOrderDetail()">📋 Salin detail</button>
+    </div>
+  </div>
+
+  <div class="toast" id="toast">Berhasil!</div>
+
+  <script src="js/products.js"></script>
+  <script src="js/store.js"></script>
+  <script src="js/dashboard.js"></script>
+</body>
+</html>
