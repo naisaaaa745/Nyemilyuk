@@ -283,7 +283,7 @@ function exportData() {
 }
 
 function resetData() {
-  if (!confirm("Reset semua data? Pesanan akan hilang dan menu kembali ke 5 produk awal.")) return;
+  if (!confirm("Reset semua data? Pesanan akan hilang dan menu kembali ke 4 produk awal.")) return;
   Store.resetAll();
   renderAll();
   dashboardToast("Data toko dikembalikan ke awal.");

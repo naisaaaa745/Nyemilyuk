@@ -4,7 +4,7 @@
    ============================================================ */
 
 const STORE_KEYS = {
-  products: "nyemilyuk.products.v1",
+  products: "nyemilyuk.products.v2",
   orders: "nyemilyuk.orders.v1",
   whatsapp: "nyemilyuk.whatsapp.v1"
 };

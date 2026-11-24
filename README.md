@@ -9,7 +9,7 @@ Dibangun dari file `nyemilyuk_katalog_final.html` dengan **desain, palet warna, 
 ## Fitur
 
 ### Katalog (`index.html`)
-- ✅ 5 produk, semuanya punya **foto lokal, nama, deskripsi, dan harga**
+- ✅ 4 produk (Piscok, Pisang Crispy Madu, Indomie Bakso Nyemek, Tahu Isi), semuanya punya **foto lokal, nama, deskripsi, dan harga**
 - ✅ Filter kategori: Semua menu / Cemilan / Makanan berat
 - ✅ Tombol **Pesan** → langsung membuka WhatsApp dengan pesan otomatis
 - ✅ Keranjang: **tambah, kurangi, hapus** produk + total otomatis
@@ -41,16 +41,15 @@ Nyemilyuk/
 ├── assets/
 │   └── images/             # Semua foto produk + foto hero (tersimpan lokal)
 │       ├── hero-cemilan.jpg
-│       ├── 1-risol-mayo.jpg
-│       ├── 2-risol-sayur.jpg
-│       ├── 3-sosbul-sosis-bulat.jpg
-│       ├── 4-indomie-nyemek-bakso.jpg
+│       ├── 1-piscok.jpg
+│       ├── 2-pisang-crispy-madu.jpg
+│       ├── 3-indomie-bakso-nyemek.jpg
 │       └── 5-tahu-isi.jpg
 ├── css/
 │   ├── style.css           # CSS katalog asli (dipindahkan dari <style>)
 │   └── dashboard.css       # CSS dashboard, palet warna sama
 ├── js/
-│   ├── products.js         # Data 5 produk bawaan
+│   ├── products.js         # Data 4 produk bawaan
 │   ├── store.js            # localStorage, format Rupiah, utilitas
 │   ├── catalog.js          # Logika katalog & keranjang
 │   └── dashboard.js        # Logika dashboard
