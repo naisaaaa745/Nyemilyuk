@@ -6,10 +6,10 @@
 const STORE_KEYS = {
   products: "nyemilyuk.products.v2",
   orders: "nyemilyuk.orders.v1",
-  whatsapp: "nyemilyuk.whatsapp.v1"
+  whatsapp: "nyemilyuk.whatsapp.v2"
 };
 
-const DEFAULT_WHATSAPP = "628129793540"; // 085129793540
+const DEFAULT_WHATSAPP = "6285129793540"; // 085129793540
 
 const Store = {
   _read(key, fallback) {

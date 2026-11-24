@@ -26,9 +26,7 @@ Dibangun dari file `nyemilyuk_katalog_final.html` dengan **desain, palet warna, 
 - ⚙️ **Pengaturan**: ubah nomor WhatsApp toko, unduh cadangan JSON, reset data
 - 🔄 Sinkron otomatis antar tab katalog dan dashboard
 
-**Nomor WhatsApp toko:** `085129793540` → tersimpan sebagai `628129793540` (format `wa.me`).
-
-> Catatan: nomor di file HTML awal tertulis `6285129793540` (kelebihan digit `5`). Sudah diperbaiki ke `628129793540`.
+**Nomor WhatsApp toko:** `085129793540` → tersimpan sebagai `6285129793540` (format `wa.me`, tanpa tanda `+` dan angka `0` di depan).
 
 ---
 
