@@ -38,7 +38,7 @@ Nyemilyuk/
 ├── dashboard.html          # Panel pengelolaan toko
 ├── assets/
 │   └── images/             # Semua foto produk + foto hero (tersimpan lokal)
-│       ├── hero-cemilan.jpg
+│       ├── hero-mie-nyemek.png
 │       ├── 1-piscok.jpg
 │       ├── 2-pisang-crispy-madu.jpg
 │       ├── 3-indomie-bakso-nyemek.jpg
