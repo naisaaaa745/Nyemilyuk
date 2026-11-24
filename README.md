@@ -39,7 +39,7 @@ Nyemilyuk/
 ├── assets/
 │   └── images/             # Semua foto produk + foto hero (tersimpan lokal)
 │       ├── hero-mie-nyemek.png
-│       ├── logo-mie-nyemek.png
+│       ├── logo-background.png
 │       ├── 1-piscok.jpg
 │       ├── 2-pisang-crispy-madu.jpg
 │       ├── 3-indomie-bakso-nyemek.jpg
