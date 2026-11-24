@@ -5,10 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#56351f">
   <title>Dashboard — Nyemil Yuk!</title>
+  <script>document.documentElement.classList.add("auth-checking");</script>
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/dashboard.css">
 </head>
 <body>
+  <div id="authGate" class="auth-gate">Memeriksa sesi admin…</div>
   <div class="topbar">PANEL TOKO ✦ Kelola menu & pesanan NyemilYuk!</div>
   <header>
     <nav class="nav">
@@ -20,7 +22,10 @@
         <a href="#produk">Produk</a>
         <a href="#pengaturan">Pengaturan</a>
       </div>
-      <a class="cart-pill" href="index.html">← Lihat Katalog</a>
+      <div class="nav-actions">
+        <a class="cart-pill" href="index.html">← Lihat Katalog</a>
+        <button class="btn btn-ghost btn-small" onclick="logoutAdmin()">Keluar</button>
+      </div>
     </nav>
   </header>
 
@@ -28,12 +33,8 @@
     <section class="dash-head">
       <div class="kicker">Panel pengelolaan</div>
       <h1>Dashboard NyemilYuk! 🍜</h1>
-      <p>Pantau pesanan yang masuk dari WhatsApp, kelola menu katalog, dan ubah nomor toko dalam satu tempat. Perubahan langsung tampil di halaman katalog.</p>
+      <p>Pantau pesanan yang masuk dari WhatsApp dan kelola menu katalog. Semua perubahan tersimpan di Supabase dan langsung tampil di halaman pembeli.</p>
     </section>
-
-    <div class="note" id="fileNote" style="margin:18px 22px 0" hidden>
-      ⚠️ <strong>Mode file lokal:</strong> data katalog dan dashboard bisa tersimpan terpisah. Jalankan lewat server lokal (<code>python -m http.server 8000</code>) atau deploy ke GitHub Pages agar pesanan otomatis muncul di sini.
-    </div>
 
     <div class="tabs">
       <button class="tab active" data-target="ringkasan">📊 Ringkasan</button>
@@ -44,7 +45,8 @@
 
     <!-- RINGKASAN -->
     <section class="stats" id="ringkasan">
-      <div class="stat"><div class="icon">🍽️</div><div class="label">Total menu</div><div class="value" id="statProducts">0</div><div class="sub" id="statCategories">0 kategori</div></div>
+      <div class="stat"><div class="icon">🍽️</div><div class="label">Total produk</div><div class="value" id="statProducts">0</div><div class="sub" id="statCategories">0 kategori</div></div>
+      <div class="stat"><div class="icon">✅</div><div class="label">Produk tersedia</div><div class="value" id="statAvailable">0</div><div class="sub">Tampil di katalog pembeli</div></div>
       <div class="stat"><div class="icon">🧾</div><div class="label">Total pesanan</div><div class="value" id="statOrders">0</div><div class="sub" id="statNew">0 perlu diproses</div></div>
       <div class="stat"><div class="icon">💰</div><div class="label">Nilai pesanan</div><div class="value" id="statRevenue">Rp0</div><div class="sub">Akumulasi semua pesanan</div></div>
       <div class="stat"><div class="icon">💬</div><div class="label">WhatsApp toko</div><div class="value" style="font-size:18px" id="statWa">-</div><div class="sub">Tersambung ke tombol Pesan</div></div>
@@ -91,28 +93,30 @@
       </div>
 
       <div class="setting-row">
-        <div><h3>Nomor WhatsApp toko</h3><p>Dipakai oleh tombol Pesan, Checkout, dan Chat WhatsApp. Format: 08… atau 62…</p></div>
-        <div class="control">
-          <input id="waInput" type="tel" placeholder="085129793540">
-          <button class="btn btn-green" onclick="saveWhatsapp()">Simpan nomor</button>
-        </div>
+        <div><h3>Nomor WhatsApp toko</h3><p>Dipakai oleh tombol Pesan, Checkout, dan Chat WhatsApp. Nomor ini ditetapkan di konfigurasi deployment.</p></div>
+        <div class="control"><strong id="waInput" style="font-size:16px">-</strong></div>
       </div>
 
       <div class="setting-row">
-        <div><h3>Cadangkan data</h3><p>Unduh produk dan pesanan dalam bentuk file JSON.</p></div>
+        <div><h3>Akun yang sedang login</h3><p>Hanya akun dengan role admin yang bisa membuka halaman ini.</p></div>
+        <div class="control"><span id="adminEmail" class="count-label">-</span></div>
+      </div>
+
+      <div class="setting-row">
+        <div><h3>Cadangkan data</h3><p>Unduh produk dan pesanan dari database dalam bentuk file JSON.</p></div>
         <div class="control"><button class="btn btn-ghost" onclick="exportData()">⬇ Unduh data (.json)</button></div>
       </div>
 
       <div class="setting-row">
-        <div><h3>Kembalikan data awal</h3><p>Menghapus semua pesanan dan mengembalikan 4 menu bawaan beserta nomor toko.</p></div>
-        <div class="control"><button class="btn btn-danger" onclick="resetData()">Reset data toko</button></div>
+        <div><h3>Keluar dari panel</h3><p>Akhiri sesi admin pada perangkat ini.</p></div>
+        <div class="control"><button class="btn btn-danger" onclick="logoutAdmin()">Keluar</button></div>
       </div>
     </section>
   </main>
 
   <footer>
     <strong style="font-size:17px">NyemilYuk! 🍜</strong><br>
-    Panel dashboard — data tersimpan di browser perangkat ini.<br>
+    Panel dashboard — data tersimpan terpusat di Supabase.<br>
     <a class="footer-link" href="index.html">Kembali ke katalog →</a>
   </footer>
 
@@ -128,6 +132,8 @@
         <div class="form-field full"><label for="fDesc">Deskripsi *</label><textarea id="fDesc" required maxlength="300" placeholder="Ceritakan rasanya…"></textarea></div>
         <div class="form-field"><label for="fPrice">Harga (Rp) *</label><input id="fPrice" type="number" min="0" step="500" required placeholder="5000"></div>
         <div class="form-field"><label for="fCategory">Kategori *</label><input id="fCategory" required list="categoryOptions" placeholder="Cemilan"><datalist id="categoryOptions"><option value="Cemilan"></option><option value="Makanan berat"></option><option value="Minuman"></option></datalist></div>
+        <div class="form-field"><label for="fStock">Stok *</label><input id="fStock" type="number" min="0" max="9999" step="1" required value="0"></div>
+        <div class="form-field full checkbox-field"><label><input id="fAvailable" type="checkbox" checked> Tampilkan produk di katalog pembeli</label></div>
         <div class="form-field"><label for="fTag">Label kecil</label><input id="fTag" maxlength="30" placeholder="Favorit"></div>
         <div class="form-field"><label for="fImageFile">Upload foto</label><input id="fImageFile" type="file" accept="image/*" onchange="previewImage(this)"><span class="form-hint">Atau isi URL foto di kolom berikut.</span></div>
         <div class="form-field full"><label for="fImage">URL foto</label><input id="fImage" placeholder="https://… atau assets/images/…"><img class="image-preview" id="imagePreview" alt="Pratinjau foto" hidden></div>
@@ -152,8 +158,12 @@
 
   <div class="toast" id="toast">Berhasil!</div>
 
-  <script src="js/products.js"></script>
-  <script src="js/store.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/util.js"></script>
+  <script src="js/supabase-client.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/auth.js"></script>
   <script src="js/dashboard.js"></script>
 </body>
 </html>

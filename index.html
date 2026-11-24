@@ -12,7 +12,7 @@
   <header>
     <nav class="nav">
       <a class="brand" href="#"><span class="brand-mark"><img src="assets/images/mangkuk-merah.png" alt="Logo NyemilYuk!"></span><span>Nyemil<span style="color:#b17b27">Yuk!</span></span></a>
-      <div class="navlinks"><a href="#home">Beranda</a><a href="#menu">Menu</a><a href="#about">Tentang</a><a href="dashboard.html">Dashboard</a></div>
+      <div class="navlinks"><a href="#home">Beranda</a><a href="#menu">Menu</a><a href="#about">Tentang</a><a href="login.html">Login Admin</a></div>
       <button class="cart-pill" onclick="openCart()">🛒 Keranjang <span class="count" id="cartCount">0</span></button>
     </nav>
   </header>
@@ -59,7 +59,7 @@
     <strong style="font-size:17px">NyemilYuk! 🍜</strong><br>
     Terima kasih sudah mampir. Semoga harimu seenak cemilan favoritmu!<br>
     <span style="opacity:.7">© 2026 NyemilYuk! — Made with love.</span><br>
-    <a class="footer-link" href="dashboard.html">Panel Dashboard →</a>
+    <a class="footer-link" href="login.html">Panel Admin →</a>
   </footer>
 
   <div class="overlay" id="overlay" onclick="closeCart()"></div>
@@ -77,8 +77,11 @@
   <a class="wa-float" href="#" onclick="contactWhatsApp(event)">💬 Chat WhatsApp</a>
   <div class="toast" id="toast">Berhasil ditambahkan ke keranjang!</div>
 
-    <script src="js/products.js"></script>
-  <script src="js/store.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/util.js"></script>
+  <script src="js/supabase-client.js"></script>
+  <script src="js/api.js"></script>
   <script src="js/catalog.js"></script>
 </body>
 </html>

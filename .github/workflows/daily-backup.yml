@@ -1,0 +1,76 @@
+name: Daily Supabase Backup
+
+on:
+  schedule:
+    # 18:00 UTC = 01:00 WIB hari berikutnya
+    - cron: "0 18 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  backup:
+    runs-on: ubuntu-latest
+    env:
+      DATE: ${{ github.run_id }}-${{ github.run_attempt }}
+      BACKUP_DATE: ${{ github.event.schedule && 'scheduled' || 'manual' }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Siapkan tanggal backup
+        run: echo "STAMP=$(date -u +%Y-%m-%d)" >> "$GITHUB_ENV"
+
+      - name: Instal pg_dump dan zip
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq postgresql-client zip
+
+      - name: Backup database dengan pg_dump
+        env:
+          PGHOST: ${{ secrets.SUPABASE_DB_HOST }}
+          PGPORT: ${{ secrets.SUPABASE_DB_PORT }}
+          PGDATABASE: ${{ secrets.SUPABASE_DB_NAME }}
+          PGUSER: ${{ secrets.SUPABASE_DB_USER }}
+          PGPASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
+          PGSSLMODE: require
+        run: |
+          test -n "$PGHOST" && test -n "$PGDATABASE" && test -n "$PGUSER" && test -n "$PGPASSWORD"
+          pg_dump --format=custom --no-owner --no-privileges \
+            --file="database-${STAMP}.dump" \
+            --host="$PGHOST" --port="${PGPORT:-5432}" \
+            --username="$PGUSER" --dbname="$PGDATABASE"
+          gzip "database-${STAMP}.dump"
+
+      - name: Simpan backup database (retensi 30 hari)
+        uses: actions/upload-artifact@v4
+        with:
+          name: database-${{ env.STAMP }}
+          path: database-*.dump.gz
+          retention-days: 30
+          if-no-files-found: error
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Backup foto produk dari Supabase Storage
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          SUPABASE_IMAGE_BUCKET: ${{ secrets.SUPABASE_IMAGE_BUCKET }}
+          BACKUP_DIR: storage-${{ env.STAMP }}
+        run: |
+          node .github/scripts/backup-storage.mjs
+          zip -rq "storage-${STAMP}.zip" "storage-${STAMP}"
+
+      - name: Simpan backup foto (retensi 30 hari)
+        uses: actions/upload-artifact@v4
+        with:
+          name: storage-${{ env.STAMP }}
+          path: storage-*.zip
+          retention-days: 30
+          if-no-files-found: error
