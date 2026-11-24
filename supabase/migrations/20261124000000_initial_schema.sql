@@ -7,29 +7,6 @@
 create extension if not exists pgcrypto;
 
 -- ------------------------------------------------------------
--- Fungsi pembantu: cek apakah user saat ini admin.
--- SECURITY DEFINER sengaja dipakai supaya tidak terjadi rekursi RLS
--- ketika tabel user_roles dibaca dari dalam policy.
--- ------------------------------------------------------------
-create or replace function public.is_admin()
-returns boolean
-language sql
-stable
-security definer
-set search_path = public
-as $$
-  select exists (
-    select 1
-    from public.user_roles
-    where user_id = auth.uid()
-      and role = 'admin'
-  );
-$$;
-
-revoke all on function public.is_admin() from public;
-grant execute on function public.is_admin() to anon, authenticated;
-
--- ------------------------------------------------------------
 -- Tabel produk
 -- ------------------------------------------------------------
 create table if not exists public.products (
@@ -86,6 +63,30 @@ create table if not exists public.order_items (
 );
 
 create index if not exists order_items_order_idx on public.order_items (order_id);
+
+-- ------------------------------------------------------------
+-- Fungsi pembantu: cek apakah user saat ini admin.
+-- Dibuat SETELAH tabel user_roles ada, karena body SQL
+-- diverifikasi saat fungsi dibuat.
+-- SECURITY DEFINER sengaja dipakai supaya tidak terjadi rekursi RLS.
+-- ------------------------------------------------------------
+create or replace function public.is_admin()
+returns boolean
+language sql
+stable
+security definer
+set search_path = public
+as $$
+  select exists (
+    select 1
+    from public.user_roles
+    where user_id = auth.uid()
+      and role = 'admin'
+  );
+$$;
+
+revoke all on function public.is_admin() from public;
+grant execute on function public.is_admin() to anon, authenticated;
 
 -- ------------------------------------------------------------
 -- updated_at otomatis
