@@ -38,7 +38,7 @@ Nyemilyuk/
 ├── dashboard.html          # Panel pengelolaan toko
 ├── assets/
 │   └── images/             # Semua foto produk + foto hero (tersimpan lokal)
-│       ├── logo-background.png    # dipakai logo & gambar hero "Lagi lapar?"
+│       └── mangkuk-merah.png      # ikon logo & gambar hero "Lagi lapar?"
 │       ├── 1-piscok.jpg
 │       ├── 2-pisang-crispy-madu.jpg
 │       ├── 3-indomie-bakso-nyemek.jpg

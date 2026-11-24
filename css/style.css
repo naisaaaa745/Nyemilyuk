@@ -97,5 +97,5 @@
 .field-mini:focus{outline:2px solid var(--butter);border-color:var(--brown2)}
 .footer-link{display:inline-block;margin-top:6px;color:#f5cf62;font-weight:800}
 .footer-link:hover{text-decoration:underline}
-.brand-mark{overflow:hidden;padding:0;background-image:url("../assets/images/logo-background.png");background-size:cover;background-position:center}
-.brand-mark img{display:block;width:100%;height:100%;object-fit:cover;border-radius:13px}
+.brand-mark{overflow:hidden;padding:0;background:transparent;box-shadow:none}
+.brand-mark img{display:block;width:100%;height:100%;object-fit:contain;border-radius:0}
